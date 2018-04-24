@@ -15,5 +15,3 @@ printBoard(board);
 board[0][1] = '1';
 board[2][2] = 'B';
 printBoard(board);
-
-console.log('Testing Push');
