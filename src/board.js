@@ -1,10 +1,9 @@
-
 export class Board {
   constructor(numberOfRows, numberOfColumns, numberOfBombs) {
     this._numberOfRows = numberOfRows;
     this._numberOfColumns = numberOfColumns;
     this._numberOfBombs = numberOfBombs;
-    this._numberOfTiles = numberOfRows * numberOfColumns;
+    this._numberOfEmptyTiles = numberOfRows * numberOfColumns;
     this._playerBoard = Board.generatePlayerBoard(numberOfRows, numberOfColumns);
     this._bombBoard = Board.generateBombBoard(numberOfBombs, numberOfColumns, numberOfBombs);
     }
@@ -16,12 +15,13 @@ export class Board {
         if (this._playerBoard[rowIndex][columnIndex] !== ' ') {
           console.log(`This tile has already been flipped!`);
           return;
-        } else if (this._bombBoard[rowIndex][columnIndex] === 'B') {
+        }
+        if (this._bombBoard[rowIndex][columnIndex] === 'B') {
           this._playerBoard[rowIndex][columnIndex] = 'B';
         } else {
           this._playerBoard[rowIndex][columnIndex] = this.getNumberOfNeighborBombs(rowIndex, columnIndex);
         }
-        this._numberOfTiles--;
+        this._numberOfEmptyTiles--;
     }
 
     getNumberOfNeighborBombs(rowIndex, columnIndex) {
@@ -37,6 +37,7 @@ export class Board {
         ];
         const numberOfRows = this._bombBoard.length;
         const numberOfColumns = this._bombBoard[0].length;
+
         let numberOfBombs = 0;
 
         neighborOffsets.forEach(offset => {
@@ -55,8 +56,8 @@ export class Board {
         return numberOfBombs;
     }
 
-    hasSafeTiles() {
-        return this._numberOfTiles !== this._numberOfBombs;
+    hasNonBombEmptySpaces() {
+        return this._numberOfEmptyTiles !== this._numberOfBombs;
     }
 
     print() {
@@ -90,8 +91,8 @@ export class Board {
 
       while (numberOfBombsPlaced < numberOfBombs) {
         // This code has the potential to place bombs on top of bombs, this will be fixed with control flow.
-        let randomRowIndex = Math.floor(Math.random() * numberOfRows);
-        let randomColumnIndex = Math.floor(Math.random() * numberOfColumns);
+        const randomRowIndex = Math.floor(Math.random() * numberOfRows);
+        const randomColumnIndex = Math.floor(Math.random() * numberOfColumns);
         if (board[randomRowIndex][randomColumnIndex] !== 'B') {
           board[randomRowIndex][randomColumnIndex] = 'B';
           numberOfBombsPlaced++;
